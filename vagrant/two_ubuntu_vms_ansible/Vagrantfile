@@ -1,0 +1,44 @@
+Vagrant.configure("2") do |config|
+
+    config.vm.define "srv01", primary: true do |srv01|
+        srv01.vm.box = "gusztavvargadr/ubuntu-server-2004-lts"
+        srv01.vm.network "public_network", bridge: "External Switch"
+        srv01.vm.provider "hyperv"
+        srv01.vm.hostname = "srv01"
+
+        srv01.vm.provider "hyperv" do |h|
+            h.enable_virtualization_extensions = false
+            h.linked_clone = false
+            h.cpus = 2
+            h.memory = 4096
+            h.vmname = "srv01"
+        end
+        srv01.vm.provision "ansible" do |ansible|
+            ansible.verbose = "v"
+            ansible.playbook = "srv01-playbook.yaml"
+        end
+    end
+
+
+
+
+    config.vm.define "srv02", primary: true do |srv02|
+        srv02.vm.box = "gusztavvargadr/ubuntu-server-2004-lts"
+        srv02.vm.network "public_network", bridge: "External Switch"
+        srv02.vm.provider "hyperv"
+        srv02.vm.hostname = "srv02"
+
+        srv02.vm.provider "hyperv" do |h|
+            h.enable_virtualization_extensions = false
+            h.linked_clone = false
+            h.cpus = 2
+            h.memory = 4096
+            h.vmname = "srv02"
+        end
+        srv02.vm.provision "ansible" do |ansible|
+            ansible.verbose = "v"
+            ansible.playbook = "srv02-playbook.yaml"
+        end
+    end
+
+end
